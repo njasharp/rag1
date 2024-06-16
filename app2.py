@@ -19,7 +19,7 @@ except Exception as e:
     raise
 
 # Streamlit app
-st.title("Welcome to GChat AI")
+st.title("Welcome to GChat with rag AI")
 
 # Sidebar
 st.sidebar.title("Query Box")
