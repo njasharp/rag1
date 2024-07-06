@@ -28,7 +28,7 @@ def generate_audio(audio_text, filename="audio.mp3"):
         st.sidebar.error(f"Failed to generate text-to-speech: {e}")
         return None
 
-st.image("ai.PNG")
+st.image("ai.PNG", width=120)
 st.title("Welcome to GChat with rag Plus audio AI")
 
 # Sidebar
