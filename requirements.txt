@@ -1,4 +1,4 @@
-pdfplumber
 streamlit
-groq
 pyttsx3
+pdfplumber
+groq
