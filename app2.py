@@ -2,7 +2,7 @@ import os
 import pdfplumber
 import streamlit as st
 from groq import Groq
-
+import pyttsx3
 
 # Ensure the API key is set
 api_key = os.environ.get("GROQ_API_KEY")
@@ -79,6 +79,27 @@ def query_groq(system_prompt, combined_prompt):
         st.error(f"An error occurred: {e}")
         return None
 
+# Function to speak the analysis result
+def speak_analysis_result(audio):
+    st.sidebar.write("speaking")
+    engine = pyttsx3.init()
+    engine.say(audio)
+    engine.runAndWait()
+    engine.stop()
+
+# Initialize session state variables
+if 'analysis_result_text' not in st.session_state:
+    st.session_state.analysis_result_text = ""
+
+# Display the analysis result
+analysis_result = st.empty()
+if st.session_state.analysis_result_text:
+    analysis_result.write(f"Analysis Result: {st.session_state.analysis_result_text}")
+
+# Speak button
+if st.sidebar.button("speak!"):
+    speak_analysis_result(st.session_state.analysis_result_text)
+
 # Button to submit the query
 if st.sidebar.button("Submit"):
     if prompt or file_content:
@@ -88,8 +109,9 @@ if st.sidebar.button("Submit"):
             # Query Groq's API
             reply = query_groq(system_prompt, combined_prompt)
             if reply:
+                st.session_state.analysis_result_text = reply  # Store the result in the session state
                 st.success("Query completed!")
-                st.info(reply)
+                analysis_result.write(f"Analysis Result: {reply}")
             else:
                 st.error("No response found.")
     else:
@@ -97,6 +119,7 @@ if st.sidebar.button("Submit"):
 
 # Reset button
 if st.sidebar.button("Reset"):
+    st.session_state.analysis_result_text = ""  # Clear the analysis result
     st.experimental_rerun()
 
 # Instructions
