@@ -79,7 +79,7 @@ def query_groq(system_prompt, combined_prompt):
             "role": "user",
             "content": combined_prompt,
         })
-        
+
         chat_completion = client.chat.completions.create(
             messages=messages,
             model="llama3-8b-8192",
@@ -133,11 +133,12 @@ st.write("Model: llama3-8b-8192")
 st.info('build by DW v3') #v7rec
 
 # Text input for user name
-talk1 = st.text_input("Enter your name:")
+talk1 = st.text_input("Enter your text:")
 
 # Button to trigger speaking the text input
 if st.button("Speak!"):
-    st.write("Speaking...")
-    audio_file = generate_audio(talk1)
-    if audio_file:
-        st.audio(audio_file)
+    if talk1:
+        st.write("Speaking...")
+        audio_file = generate_audio(talk1)
+        if audio_file:
+            st.audio(audio_file)
