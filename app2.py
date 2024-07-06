@@ -32,7 +32,7 @@ def generate_audio(audio_text, filename="audio.mp3"):
 st.title("Welcome to GChat with rag Plus audio AI")
 
 # Sidebar
-st.sidebar.title("Query Box")
+st.sidebar.title("Query Boxes")
 
 # System prompt input in the sidebar
 system_prompt = st.sidebar.text_area("Enter system prompt (optional):", value="", height=100)
@@ -120,6 +120,7 @@ if st.sidebar.button("Speak Analysis Result"):
     audio_file = generate_audio(st.session_state.analysis_result_text)
     if audio_file:
         st.audio(audio_file)
+
 
 # Reset button
 if st.sidebar.button("Reset"):
