@@ -28,7 +28,7 @@ def generate_audio(audio_text, filename="audio.mp3"):
         st.sidebar.error(f"Failed to generate text-to-speech: {e}")
         return None
 
-st.image("ai.PNG", width=120)
+st.image("ai.PNG", width=280)
 st.title("Welcome to GChat with rag Plus audio AI")
 
 # Sidebar
@@ -130,7 +130,7 @@ if st.sidebar.button("Reset"):
 st.write("Enter a system prompt (optional), a short-term memory (optional), and a user prompt in the sidebar, then click 'Submit' to get a response from the LLM.")
 st.write("Alternatively, you can upload a text or PDF file to use its content as the prompt.")
 st.write("Model: llama3-8b-8192")
-st.info('build by DW v3') #v7rec
+st.info('build by DW v3.1') #v7rec
 
 # Text input for user name
 talk1 = st.text_input("Enter your text:")
