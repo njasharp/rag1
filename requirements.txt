@@ -1,4 +1,4 @@
 streamlit
-pyttsx3
+gtts
 pdfplumber
 groq
