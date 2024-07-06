@@ -96,12 +96,54 @@ analysis_result = st.empty()
 if st.session_state.analysis_result_text:
     analysis_result.write(f"Analysis Result: {st.session_state.analysis_result_text}")
 
-# Speak button
-if st.sidebar.button("speak!"):
+# Speak button with custom style
+speak_button_html = """
+    <style>
+    .speak-button {
+        background-color: #4CAF50; /* Green */
+        border: none;
+        color: white;
+        padding: 10px 24px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px;
+    }
+    .speak-button:hover {
+        background-color: #45a049;
+    }
+    </style>
+    <button class="speak-button">Speak!</button>
+"""
+if st.sidebar.markdown(speak_button_html, unsafe_allow_html=True):
     speak_analysis_result(st.session_state.analysis_result_text)
 
-# Button to submit the query
-if st.sidebar.button("Submit"):
+# Button to submit the query with custom style
+submit_button_html = """
+    <style>
+    .submit-button {
+        background-color: #008CBA; /* Blue */
+        border: none;
+        color: white;
+        padding: 10px 24px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px;
+    }
+    .submit-button:hover {
+        background-color: #007B9A;
+    }
+    </style>
+    <button class="submit-button">Submit</button>
+"""
+if st.sidebar.markdown(submit_button_html, unsafe_allow_html=True):
     if prompt or file_content:
         with st.spinner("Querying the chatbot..."):
             # Combine short-term memory, file content, and user prompt
@@ -117,8 +159,29 @@ if st.sidebar.button("Submit"):
     else:
         st.sidebar.warning("Please enter a prompt or upload a file.")
 
-# Reset button
-if st.sidebar.button("Reset"):
+# Reset button with custom style
+reset_button_html = """
+    <style>
+    .reset-button {
+        background-color: #f44336; /* Red */
+        border: none;
+        color: white;
+        padding: 10px 24px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px;
+    }
+    .reset-button:hover {
+        background-color: #da190b;
+    }
+    </style>
+    <button class="reset-button">Reset</button>
+"""
+if st.sidebar.markdown(reset_button_html, unsafe_allow_html=True):
     st.session_state.analysis_result_text = ""  # Clear the analysis result
     st.experimental_rerun()
 
