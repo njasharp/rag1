@@ -82,10 +82,13 @@ def query_groq(system_prompt, combined_prompt):
 # Function to speak the analysis result
 def speak_analysis_result(audio):
     st.sidebar.write("speaking")
-    engine = pyttsx3.init()
-    engine.say(audio)
-    engine.runAndWait()
-    engine.stop()
+    try:
+        engine = pyttsx3.init()
+        engine.say(audio)
+        engine.runAndWait()
+        engine.stop()
+    except Exception as e:
+        st.sidebar.error(f"Failed to initialize text-to-speech engine: {e}")
 
 # Initialize session state variables
 if 'analysis_result_text' not in st.session_state:
@@ -96,11 +99,7 @@ analysis_result = st.empty()
 if st.session_state.analysis_result_text:
     analysis_result.write(f"Analysis Result: {st.session_state.analysis_result_text}")
 
-# Speak button
-if st.sidebar.button("speak!"):
-    speak_analysis_result(st.session_state.analysis_result_text)
-
-# Button to submit the query
+# Button to submit the query with custom style
 if st.sidebar.button("Submit"):
     if prompt or file_content:
         with st.spinner("Querying the chatbot..."):
@@ -117,8 +116,54 @@ if st.sidebar.button("Submit"):
     else:
         st.sidebar.warning("Please enter a prompt or upload a file.")
 
-# Reset button
-if st.sidebar.button("Reset"):
+# Speak button with custom style
+speak_button_html = """
+    <style>
+    .speak-button {
+        background-color: #4CAF50; /* Green */
+        border: none;
+        color: white;
+        padding: 10px 24px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px;
+    }
+    .speak-button:hover {
+        background-color: #45a049;
+    }
+    </style>
+    <button class="speak-button">Speak!</button>
+"""
+if st.sidebar.markdown(speak_button_html, unsafe_allow_html=True):
+    speak_analysis_result(st.session_state.analysis_result_text)
+
+# Reset button with custom style
+reset_button_html = """
+    <style>
+    .reset-button {
+        background-color: #f44336; /* Red */
+        border: none;
+        color: white;
+        padding: 10px 24px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px;
+    }
+    .reset-button:hover {
+        background-color: #da190b;
+    }
+    </style>
+    <button class="reset-button">Reset</button>
+"""
+if st.sidebar.markdown(reset_button_html, unsafe_allow_html=True):
     st.session_state.analysis_result_text = ""  # Clear the analysis result
     st.experimental_rerun()
 
