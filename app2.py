@@ -2,7 +2,7 @@ import os
 import pdfplumber
 import streamlit as st
 from groq import Groq
-import pyttsx3
+from gtts import gTTS
 
 # Ensure the API key is set
 api_key = os.environ.get("GROQ_API_KEY")
@@ -17,6 +17,16 @@ try:
 except Exception as e:
     st.error(f"Failed to initialize Groq client: {e}")
     raise
+
+# Function to generate and play text-to-speech audio
+def generate_audio(audio_text, filename="audio.mp3"):
+    try:
+        tts = gTTS(text=audio_text, lang='en')
+        tts.save(filename)
+        return filename
+    except Exception as e:
+        st.sidebar.error(f"Failed to generate text-to-speech: {e}")
+        return None
 
 # Streamlit app
 st.title("Welcome to GChat with rag AI")
@@ -79,17 +89,6 @@ def query_groq(system_prompt, combined_prompt):
         st.error(f"An error occurred: {e}")
         return None
 
-# Function to speak the analysis result
-def speak_analysis_result(audio):
-    st.sidebar.write("speaking")
-    try:
-        engine = pyttsx3.init()
-        engine.say(audio)
-        engine.runAndWait()
-        engine.stop()
-    except Exception as e:
-        st.sidebar.error(f"Failed to initialize text-to-speech engine: {e}")
-
 # Initialize session state variables
 if 'analysis_result_text' not in st.session_state:
     st.session_state.analysis_result_text = ""
@@ -99,7 +98,7 @@ analysis_result = st.empty()
 if st.session_state.analysis_result_text:
     analysis_result.write(f"Analysis Result: {st.session_state.analysis_result_text}")
 
-# Button to submit the query with custom style
+# Button to submit the query
 if st.sidebar.button("Submit"):
     if prompt or file_content:
         with st.spinner("Querying the chatbot..."):
@@ -116,54 +115,14 @@ if st.sidebar.button("Submit"):
     else:
         st.sidebar.warning("Please enter a prompt or upload a file.")
 
-# Speak button with custom style
-speak_button_html = """
-    <style>
-    .speak-button {
-        background-color: #4CAF50; /* Green */
-        border: none;
-        color: white;
-        padding: 10px 24px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px 2px;
-        cursor: pointer;
-        border-radius: 8px;
-    }
-    .speak-button:hover {
-        background-color: #45a049;
-    }
-    </style>
-    <button class="speak-button">Speak!</button>
-"""
-if st.sidebar.markdown(speak_button_html, unsafe_allow_html=True):
-    speak_analysis_result(st.session_state.analysis_result_text)
+# Sidebar button to speak the analysis result
+if st.sidebar.button("Speak Analysis Result"):
+    audio_file = generate_audio(st.session_state.analysis_result_text)
+    if audio_file:
+        st.audio(audio_file)
 
-# Reset button with custom style
-reset_button_html = """
-    <style>
-    .reset-button {
-        background-color: #f44336; /* Red */
-        border: none;
-        color: white;
-        padding: 10px 24px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px 2px;
-        cursor: pointer;
-        border-radius: 8px;
-    }
-    .reset-button:hover {
-        background-color: #da190b;
-    }
-    </style>
-    <button class="reset-button">Reset</button>
-"""
-if st.sidebar.markdown(reset_button_html, unsafe_allow_html=True):
+# Reset button
+if st.sidebar.button("Reset"):
     st.session_state.analysis_result_text = ""  # Clear the analysis result
     st.experimental_rerun()
 
@@ -172,3 +131,13 @@ st.write("Enter a system prompt (optional), a short-term memory (optional), and 
 st.write("Alternatively, you can upload a text or PDF file to use its content as the prompt.")
 st.write("Model: llama3-8b-8192")
 st.info('build by DW v2') #v7
+
+# Text input for user name
+talk1 = st.text_input("Enter your name:")
+
+# Button to trigger speaking the text input
+if st.button("Speak!"):
+    st.write("Speaking...")
+    audio_file = generate_audio(talk1)
+    if audio_file:
+        st.audio(audio_file)
