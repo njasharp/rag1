@@ -29,7 +29,7 @@ def generate_audio(audio_text, filename="audio.mp3"):
         return None
 
 # Streamlit app
-st.title("Welcome to GChat with rag AI")
+st.title("Welcome to GChat with rag Plus audio AI")
 
 # Sidebar
 st.sidebar.title("Query Box")
